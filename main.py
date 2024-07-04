@@ -32,9 +32,27 @@ def leer_clientes() -> pandas.DataFrame:
 def leer_usuarios() -> pandas.DataFrame:
     return leer_tabla_excel('Datos de usuario.xlsx', 'ID_usuario')
 
-
-def procesar_usuarios():
+def crear_usuarios_inexsistentes():
     for usuario in leer_usuarios().to_dict(orient='records'):
+        query = QUERY_MANAGER.get_query(
+            'get_usuario_by_username').replace('?', usuario['username'])
+        usuarios_db_match = DB_CONFIG.execute_custom_select_query(
+            query, 'autogestion_prod', ResultType.JSON_LIST)
+        #Mostrar el usuario leído y si existe o no existe en la base de datos
+        if len(usuarios_db_match) == 0:
+            print(f"Usuario {usuario['username']} no existe en la base de datos")
+        else:
+            print(f"Usuario {usuario['username']} existe en la base de datos")
+            for u in usuarios_db_match:
+                print(u)
+        #if len(usuarios_db_match) == 0:
+        #    query = QUERY_MANAGER.get_query(
+        #        'insert_usuario').replace('?', usuario['ID_usuario'])
+        #    DB_CONFIG.execute_custom_select_query(
+        #        query, 'autogestion_prod', ResultType.JSON_LIST)
+
+def procesar_clientes():
+    for usuario in leer_clientes().to_dict(orient='records'):
         query = QUERY_MANAGER.get_query(
             'get_usuario_by_username').replace('?', usuario['ID_usuario'])
         usuarios_db_match = DB_CONFIG.execute_custom_select_query(
@@ -43,9 +61,7 @@ def procesar_usuarios():
             print(u)
 
 
-def procesar_lista_clientes():
-    for cliente in leer_clientes().to_dict(orient='records'):
-        print(cliente)
 
 
-procesar_usuarios()
+
+crear_usuarios_inexsistentes()
