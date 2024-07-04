@@ -53,8 +53,9 @@ def crear_usuarios_inexsistentes():
     c = leer_usuarios()
     print(c)
     for usuario in leer_usuarios().to_dict(orient='records'):
+        print(usuario)
         query = QUERY_MANAGER.get_query(
-            'get_user_by_username').replace('?', usuario['username'])
+            'get_usuario_by_username').replace('?', usuario['username'])
         usuarios_db_match = DB_CONFIG.execute_custom_select_query(
             query, 'autogestion_prod', ResultType.JSON_LIST)
         # Mostrar el usuario leído y si existe o no existe en la base de datos
