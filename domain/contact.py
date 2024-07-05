@@ -7,7 +7,7 @@ from config import DB_CONFIG, DB as db
 @dataclasses.dataclass
 class Contact(db.Model):
     """Contact class"""
-    __bind_key__ = DB_CONFIG.validate_bind('autogestion_prod')
+    __bind_key__ = DB_CONFIG.validate_bind('autogestion_dev')
     __table_args__ = {"schema": 'public'}
     __tablename__ = 'contactos'
     contacto_id = db.Column(
