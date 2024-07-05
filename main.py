@@ -53,11 +53,10 @@ def crear_usuarios_inexsistentes():
     with app.app_context():
         usuarios_db=db.session.query(User).all()
         for usuario in leer_usuarios().to_dict(orient='records'):
-            # Mostrar el usuario leído y si existe o no existe en la base de datos
+            existe = False
+            usuario_existente=None
             for u in usuarios_db:
-                existe = False
-                usuario_existente=None
-                if u.username == usuario['username']:
+                if u.user_name == usuario['username']:
                     existe = True
                     usuario_existente=u
             if existe:

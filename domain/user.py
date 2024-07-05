@@ -1,7 +1,7 @@
 """User entity module"""
 from __future__ import annotations
 import dataclasses
-from str_representable import StrRepresentable
+from domain.str_representable import StrRepresentable
 from config import DB_CONFIG, DB as db
 
 
@@ -15,7 +15,7 @@ class User(db.Model, StrRepresentable):
         db.Integer, primary_key=True, autoincrement=True)
     email = db.Column(db.String(255))
     user_id_key = db.Column(db.String(255))
-    username = db.Column(db.String(255))
+    user_name = db.Column(db.String(255))
     rol_id = db.Column(db.Integer)
     codigo_sap = db.Column(db.String(255))
     usuario_admin_id = db.Column(db.Integer)
@@ -26,7 +26,7 @@ class User(db.Model, StrRepresentable):
     def __init__(self, email: str, user_id_key: str, username: str, rol_id: int, codigo_sap: str, usuario_admin_id: int, contacto_id: int, activo: bool, url_foto_azure: str):
         self.email = email
         self.user_id_key = user_id_key
-        self.username = username
+        self.user_name = username
         self.rol_id = rol_id
         self.codigo_sap = codigo_sap
         self.usuario_admin_id = usuario_admin_id
