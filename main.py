@@ -111,11 +111,14 @@ def actualizar_usuarios_existentes() -> list[dict]:
     results: list[dict] = []
     with app.app_context():
         usuarios_db = db.session.query(User).all()
+        LOGGER.info(f"{len(usuarios_db)} Usuarios a procesar")
+        usuarios_procesados=0
         for usuario in leer_usuarios_excel().to_dict(orient='records'):
             usuario_existente = None
             for u in usuarios_db:
                 if str(u.user_name).find(usuario['username']) != -1:
                     usuario_existente = u
+                    break
             if usuario_existente and (usuario_existente.email != usuario['mail'] or usuario_existente.user_id_key != usuario['id keycloak']):
                 update_obj = {
                     'usuario_id': usuario_existente.usuario_id,
@@ -126,9 +129,11 @@ def actualizar_usuarios_existentes() -> list[dict]:
                 }
                 usuario_existente.user_id_key = usuario['id keycloak']
                 usuario_existente.email = usuario['mail']
-                db.session.commit()
+                
                 results.append(update_obj)
                 LOGGER.info(f"USUARIO ACTUALIZADO: {update_obj}")
+            usuarios_procesados+=1
+            print(f"Usuarios procesados en actualizacion: {usuarios_procesados}")
     return results
 
 
@@ -142,6 +147,7 @@ def procesar_usuarios():
             1,
             new_contacto_id
         )
+    LOGGER.info("INICIANDO ACTUALIZACION DE USUARIOS")
     actualizar_usuarios_existentes()
 
 def listar_usuarios():
