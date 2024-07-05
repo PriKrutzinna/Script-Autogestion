@@ -9,6 +9,7 @@ from config import APP as app, DB as db
 from result_type import ResultType
 from domain.user import User
 from domain.contact import Contact
+from domain.razon_social import RazonSocial
 
 LOGGER = logging
 LOGGER.basicConfig(
@@ -75,11 +76,17 @@ def crear_usuarios_inexsistentes():
             print(usuario)
             
 def crear_contactos_inexistentes():
-    withn app.app_context():
+    with app.app_context():
         contactos_db=db.session.query(Contact).all()
         for contacto in contactos_db:
             print(contacto)
 
+def listar_razon_social():
+    with app.app_context():
+        razon_social_db=db.session.query(RazonSocial).all()
+        for razon_social in razon_social_db:
+            print(razon_social)
 
 
-crear_contactos_inexistentes()
+
+listar_razon_social()
