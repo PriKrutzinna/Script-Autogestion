@@ -7,7 +7,7 @@ from config import DB_CONFIG, DB as db
 @dataclasses.dataclass
 class User(db.Model):
     """User class"""
-    __bind_key__ = DB_CONFIG.validate_bind('autogestion_prod')
+    __bind_key__ = DB_CONFIG.validate_bind('autogestion_dev')
     __table_args__ = {"schema": 'public'}
     __tablename__ = 'usuarios'
     usuario_id = db.Column(

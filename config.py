@@ -7,7 +7,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine
 from sqlalchemy.sql import text
 from sqlalchemy.exc import OperationalError
-from result_type import ResultType
+from domain.result_type import ResultType
 
 ENV_VAR_NAMES = ["AUTOGESTION_PROD_DB_SERVER", "AUTOGESTION_PROD_DB_PORT", "AUTOGESTION_PROD_DB_DATABASE",
                  "AUTOGESTION_PROD_DB_USER", "AUTOGESTION_PROD_DB_PWD",
