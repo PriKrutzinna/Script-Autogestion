@@ -52,6 +52,8 @@ def leer_usuarios() -> pandas.DataFrame:
 def crear_usuarios_inexsistentes():
     with app.app_context():
         usuarios_db=db.session.query(User).all()
+        usuarios_existentes: list[User] = []
+        usuarios_a_crear: list[dict] = []
         for usuario in leer_usuarios().to_dict(orient='records'):
             existe = False
             usuario_existente=None
@@ -61,14 +63,15 @@ def crear_usuarios_inexsistentes():
                     existe = True
                     usuario_existente=u
             if existe:
-                print(f"Usuario {usuario['username']} existe en la base de datos. Usuario existente: {usuario_existente.usuario_id}")
+                usuarios_existentes.append(usuario_existente)
             else:
-                print(f"Usuario {usuario['username']} NO existe en la base de datos")
-            # if len(usuarios_db_match) == 0:
-            #    query = QUERY_MANAGER.get_query(
-            #        'insert_usuario').replace('?', usuario['ID_usuario'])
-            #    DB_CONFIG.execute_custom_select_query(
-            #        query, 'autogestion_prod', ResultType.JSON_LIST)
+                usuarios_a_crear.append(usuario)
+        print(f"Usuarios existentes: {len(usuarios_existentes)}")
+        for usuario in usuarios_existentes:
+            print(usuario)
+        print(f"Usuarios a crear: {len(usuarios_a_crear)}")
+        for usuario in usuarios_a_crear:
+            print(usuario)
 
 
 
