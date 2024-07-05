@@ -1,6 +1,7 @@
 """User entity module"""
 from __future__ import annotations
 import dataclasses
+from data_transformer import DataTransformer
 from config import DB_CONFIG, DB as db
 
 
@@ -23,16 +24,16 @@ class User(db.Model):
     url_foto_azure = db.Column(db.String(255))
 
     def __init__(self, email: str, user_id_key: str, username: str, rol_id: int, codigo_sap: str, usuario_admin_id: int, contacto_id: int, activo: bool, url_foto_azure: str):
-        self.email = email
-        self.user_id_key = user_id_key
-        self.user_name = username
-        self.rol_id = rol_id
-        self.codigo_sap = codigo_sap
-        self.usuario_admin_id = usuario_admin_id
-        self.contacto_id = contacto_id
-        self.activo = activo
-        self.url_foto_azure = url_foto_azure
-        
+        self.email = DataTransformer.nan_to_none(email)
+        self.user_id_key = DataTransformer.nan_to_none(user_id_key)
+        self.user_name = DataTransformer.nan_to_none(username)
+        self.rol_id = DataTransformer.nan_to_none(rol_id)
+        self.codigo_sap = DataTransformer.nan_to_none(codigo_sap)
+        self.usuario_admin_id = DataTransformer.nan_to_none(usuario_admin_id)
+        self.contacto_id = DataTransformer.nan_to_none(contacto_id)
+        self.activo = DataTransformer.nan_to_none(activo)
+        self.url_foto_azure = DataTransformer.nan_to_none(url_foto_azure)
+
     def __repr__(self):
         """String representation"""
         public_attributes = {

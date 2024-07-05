@@ -6,7 +6,7 @@ from datetime import datetime
 import pandas
 from services.query_manager import QueryManager
 from config import APP as app, DB as db
-from domain.result_type import ResultType
+from data_transformer import DataTransformer
 from domain.user import User
 from domain.contact import Contact
 from domain.razon_social import RazonSocial
@@ -32,7 +32,8 @@ def leer_tabla_excel(file_name: str, table_name: str) -> pandas.DataFrame:
     try:
         with open(file_name, encoding='utf-8') as file:
             df = pandas.read_excel(file_name, sheet_name=table_name, dtype=str)
-            LOGGER.info(f"Archivo '{file_name}' tabla '{table_name}' leído correctamente.")
+            LOGGER.info(
+                f"Archivo '{file_name}' tabla '{table_name}' leído correctamente.")
         return df
     except Exception as e:
         LOGGER.error(
@@ -112,30 +113,35 @@ def actualizar_usuarios_existentes() -> list[dict]:
     with app.app_context():
         usuarios_db = db.session.query(User).all()
         LOGGER.info(f"{len(usuarios_db)} Usuarios a procesar")
-        usuarios_procesados=0
+        usuarios_procesados = 0
         for usuario in leer_usuarios_excel().to_dict(orient='records'):
             usuario_existente = None
             for u in usuarios_db:
                 if str(u.user_name).find(usuario['username']) != -1:
                     usuario_existente = u
                     break
-            if usuario_existente and (usuario_existente.email != usuario['mail'] or usuario_existente.user_id_key != usuario['id keycloak']):
+            new_user_id_key: str = DataTransformer(usuario['id keycloak'])
+            new_email: str = DataTransformer(usuario['mail'])
+            if usuario_existente and (usuario_existente.email != new_email or usuario_existente.user_id_key != new_user_id_key):
                 update_obj = {
                     'usuario_id': usuario_existente.usuario_id,
                     'previous_user_id_key': usuario_existente.user_id_key,
                     'previous_email': usuario_existente.email,
-                    'new_user_id_key': usuario['id keycloak'],
-                    'new_email': usuario['mail']
+                    'new_user_id_key': new_user_id_key,
+                    'new_email': new_email
                 }
-                usuario_existente.user_id_key = usuario['id keycloak']
-                usuario_existente.email = usuario['mail']
+                usuario_existente.user_id_key = new_user_id_key
+                usuario_existente.email = new_email
                 results.append(update_obj)
                 LOGGER.info(f"USUARIO A ACTUALIZAR: {update_obj}")
-            usuarios_procesados+=1
-            print(f"Usuarios procesados en actualizacion: {usuarios_procesados}")
-        LOGGER.info(f"INICIANDO COMMIT DE ACTUALIZACION ({len(results)} usuarios)")
+            usuarios_procesados += 1
+            print(
+                f"Usuarios procesados en actualizacion: {usuarios_procesados}")
+        LOGGER.info(
+            f"INICIANDO COMMIT DE ACTUALIZACION ({len(results)} usuarios)")
         db.session.commit()
-        LOGGER.info(f"USUARIOS ACTUALIZADOS CORRECTAMENTE ({len(results)} usuarios)")
+        LOGGER.info(
+            f"USUARIOS ACTUALIZADOS CORRECTAMENTE ({len(results)} usuarios)")
     return results
 
 
@@ -152,24 +158,6 @@ def procesar_usuarios():
     LOGGER.info("INICIANDO ACTUALIZACION DE USUARIOS")
     actualizar_usuarios_existentes()
 
-def listar_usuarios():
-    with app.app_context():
-        usuarios_db = db.session.query(User).all()
-        for usuario in usuarios_db:
-            print(usuario)
-
-def listar_contactos():
-    with app.app_context():
-        contactos_db = db.session.query(Contact).all()
-        for contacto in contactos_db:
-            print(contacto)
-
-
-def listar_razon_social():
-    with app.app_context():
-        razon_social_db = db.session.query(RazonSocial).all()
-        for razon_social in razon_social_db:
-            print(razon_social)
-
 
 procesar_usuarios()
+LOGGER.info("PROCESO FINALIZADO")

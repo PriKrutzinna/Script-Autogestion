@@ -1,6 +1,7 @@
 """Contact entity module"""
 from __future__ import annotations
 import dataclasses
+from data_transformer import DataTransformer
 from config import DB_CONFIG, DB as db
 
 
@@ -21,22 +22,22 @@ class Contact(db.Model):
     dni = db.Column(db.String(255))
     fecha_nacimiento = db.Column(db.DateTime)
     nombre = db.Column(db.String(255))
-    telefono= db.Column(db.String(255))
-    ciudad= db.Column(db.String(255))
+    telefono = db.Column(db.String(255))
+    ciudad = db.Column(db.String(255))
 
     def __init__(self, apellido: str, avatar: str, codigo_postal: str, create_fecha: str, delete_fecha: str, direccion: str, dni: str, fecha_nacimiento: str, nombre: str, telefono: str, ciudad: str):
-        self.apellido = apellido
-        self.avatar = avatar
-        self.codigo_postal = codigo_postal
-        self.create_fecha = create_fecha
-        self.delete_fecha = delete_fecha
-        self.direccion = direccion
-        self.dni = dni
-        self.fecha_nacimiento = fecha_nacimiento
-        self.nombre = nombre
-        self.telefono = telefono
-        self.ciudad = ciudad
-        
+        self.apellido = DataTransformer.nan_to_none(apellido)
+        self.avatar = DataTransformer.nan_to_none(avatar)
+        self.codigo_postal = DataTransformer.nan_to_none(codigo_postal)
+        self.create_fecha = DataTransformer.nan_to_none(create_fecha)
+        self.delete_fecha = DataTransformer.nan_to_none(delete_fecha)
+        self.direccion = DataTransformer.nan_to_none(direccion)
+        self.dni = DataTransformer.nan_to_none(dni)
+        self.fecha_nacimiento = DataTransformer.nan_to_none(fecha_nacimiento)
+        self.nombre = DataTransformer.nan_to_none(nombre)
+        self.telefono = DataTransformer.nan_to_none(telefono)
+        self.ciudad = DataTransformer.nan_to_none(ciudad)
+
     def __repr__(self):
         """String representation"""
         public_attributes = {
