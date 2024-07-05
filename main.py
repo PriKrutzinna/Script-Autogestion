@@ -56,13 +56,14 @@ def crear_usuarios_inexsistentes():
             existe = False
             usuario_existente=None
             for u in usuarios_db:
-                if u.user_name == usuario['username']:
+                #check if string contains substring
+                if str(u.user_name).find(usuario['username'])!=-1 :
                     existe = True
                     usuario_existente=u
             if existe:
-                print(f"Usuario {usuario['username']} existe en la base de datos. Usuario existente: {usuario_existente}")
+                print(f"Usuario {usuario['username']} existe en la base de datos. Usuario existente: {usuario_existente.usuario_id}")
             else:
-                print(f"Usuario {usuario['username']} no existe en la base de datos")
+                print(f"Usuario {usuario['username']} NO existe en la base de datos")
             # if len(usuarios_db_match) == 0:
             #    query = QUERY_MANAGER.get_query(
             #        'insert_usuario').replace('?', usuario['ID_usuario'])
