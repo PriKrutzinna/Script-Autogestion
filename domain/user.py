@@ -1,12 +1,11 @@
 """User entity module"""
 from __future__ import annotations
 import dataclasses
-from domain.str_representable import StrRepresentable
 from config import DB_CONFIG, DB as db
 
 
 @dataclasses.dataclass
-class User(db.Model, StrRepresentable):
+class User(db.Model):
     """User class"""
     __bind_key__ = DB_CONFIG.validate_bind('autogestion_prod')
     __table_args__ = {"schema": 'public'}
@@ -33,3 +32,12 @@ class User(db.Model, StrRepresentable):
         self.contacto_id = contacto_id
         self.activo = activo
         self.url_foto_azure = url_foto_azure
+        
+    def __repr__(self):
+        """String representation"""
+        public_attributes = {
+            key: value for key, value in self.__dict__.items() if not key.startswith('_')}
+        attributes = ', '.join(
+            f"{key}: {value}" for key, value in public_attributes.items()
+        )
+        return f"{self.__class__.__name__} -> {attributes}"
