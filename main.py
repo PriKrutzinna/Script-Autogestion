@@ -133,9 +133,9 @@ def actualizar_usuarios_existentes() -> list[dict]:
                 LOGGER.info(f"USUARIO A ACTUALIZAR: {update_obj}")
             usuarios_procesados+=1
             print(f"Usuarios procesados en actualizacion: {usuarios_procesados}")
-        # Realizar un único commit después de todas las actualizaciones
+        LOGGER.info(f"INICIANDO COMMIT DE ACTUALIZACION ({len(results)} usuarios)")
         db.session.commit()
-        LOGGER.info(f"USUARIOS ACTUALIZADOS CORRECTAMENTE ({usuarios_procesados})")
+        LOGGER.info(f"USUARIOS ACTUALIZADOS CORRECTAMENTE ({len(results)} usuarios)")
     return results
 
 
