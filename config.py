@@ -2,6 +2,8 @@
 from typing import List, Dict, Any
 from os import environ
 import pandas
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine
 from sqlalchemy.sql import text
 from sqlalchemy.exc import OperationalError
@@ -114,3 +116,7 @@ class DbConfig():
 
 
 DB_CONFIG = DbConfig()
+
+APP = Flask(__name__)
+APP.config.from_object(DbConfig())
+DB = SQLAlchemy(APP)
