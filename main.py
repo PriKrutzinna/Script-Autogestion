@@ -118,7 +118,7 @@ def actualizar_usuarios_existentes() -> list[dict]:
             for u in usuarios_db:
                 if str(u.user_name).find(usuario['username']) != -1:
                     usuario_existente = u
-            if usuario_existente:
+            if usuario_existente and (usuario_existente.email != usuario['mail'] or usuario_existente.user_id_key != usuario['id keycloak']):
                 update_obj = {
                     'usuario_id': usuario_existente.usuario_id,
                     'previous_user_id_key': usuario_existente.user_id_key,
@@ -144,6 +144,7 @@ def procesar_usuarios():
             1,
             new_contacto_id
         )
+    actualizar_usuarios_existentes()
 
 
 def listar_contactos():
