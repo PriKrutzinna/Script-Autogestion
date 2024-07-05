@@ -10,7 +10,6 @@ from domain.result_type import ResultType
 from domain.user import User
 from domain.contact import Contact
 from domain.razon_social import RazonSocial
-from domain.rel_user_contact import UsuarioContactoRepository, UsuarioContacto
 
 LOGGER = logging
 LOGGER.basicConfig(
@@ -32,9 +31,8 @@ def leer_tabla_excel(file_name: str, table_name: str) -> pandas.DataFrame:
     df: pandas.DataFrame = pandas.DataFrame()
     try:
         with open(file_name, encoding='utf-8') as file:
-            print(f"Archivo {file} encontrado")
-            LOGGER.info(f"Archivo {file} encontrado")
             df = pandas.read_excel(file_name, sheet_name=table_name, dtype=str)
+            LOGGER.info(f"Archivo '{file_name}' tabla '{table_name}' leído correctamente.")
         return df
     except Exception as e:
         LOGGER.error(
@@ -146,6 +144,11 @@ def procesar_usuarios():
         )
     actualizar_usuarios_existentes()
 
+def listar_usuarios():
+    with app.app_context():
+        usuarios_db = db.session.query(User).all()
+        for usuario in usuarios_db:
+            print(usuario)
 
 def listar_contactos():
     with app.app_context():
