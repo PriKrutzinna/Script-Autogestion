@@ -129,11 +129,13 @@ def actualizar_usuarios_existentes() -> list[dict]:
                 }
                 usuario_existente.user_id_key = usuario['id keycloak']
                 usuario_existente.email = usuario['mail']
-                
                 results.append(update_obj)
-                LOGGER.info(f"USUARIO ACTUALIZADO: {update_obj}")
+                LOGGER.info(f"USUARIO A ACTUALIZAR: {update_obj}")
             usuarios_procesados+=1
             print(f"Usuarios procesados en actualizacion: {usuarios_procesados}")
+        # Realizar un único commit después de todas las actualizaciones
+        db.session.commit()
+        LOGGER.info(f"USUARIOS ACTUALIZADOS CORRECTAMENTE ({usuarios_procesados})")
     return results
 
 
