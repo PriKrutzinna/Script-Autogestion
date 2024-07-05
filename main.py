@@ -8,6 +8,7 @@ from query_manager import QueryManager
 from config import APP as app, DB as db
 from result_type import ResultType
 from domain.user import User
+from domain.contact import Contact
 
 LOGGER = logging
 LOGGER.basicConfig(
@@ -72,7 +73,13 @@ def crear_usuarios_inexsistentes():
         print(f"Usuarios a crear: {len(usuarios_a_crear)}")
         for usuario in usuarios_a_crear:
             print(usuario)
+            
+def crear_contactos_inexistentes():
+    withn app.app_context():
+        contactos_db=db.session.query(Contact).all()
+        for contacto in contactos_db:
+            print(contacto)
 
 
 
-crear_usuarios_inexsistentes()
+crear_contactos_inexistentes()
